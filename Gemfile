@@ -5,11 +5,14 @@ gem 'pg'
 
 group :development, :test do
   gem 'rspec-rails'
+  gem 'guard-rspec'
+  gem 'spring-commands-rspec'
 end
 
 group :test do
   gem 'selenium-webdriver'
   gem 'capybara'
+  gem 'libnotify'
 end
 
 gem 'sass-rails'
