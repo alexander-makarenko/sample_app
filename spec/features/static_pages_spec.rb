@@ -2,57 +2,49 @@ require 'rails_helper'
 
 feature "Static pages" do
   
-  given(:base_title) { 'Ruby on Rails Tutorial Sample App' }
+  subject { page }
 
   feature "Home page" do
-    background { visit '/static_pages/home' }
+    background { visit root_path }
     
-    scenario "should have the content 'Sample App'" do
-      expect(page).to have_content('Sample App')
-    end
-
-    scenario "should have the base" do
-      expect(page).to have_title("#{base_title}")
-    end
-
-    scenario "should not have a custom page title" do
-      expect(page).not_to have_title("| Home")
-    end
+    it { should have_selector('h1', text: 'Sample App') }
+    it { should have_title(full_title('')) }
+    it { should_not have_title("| Home") }
   end
 
   feature "Help page" do
-    background { visit '/static_pages/help' }
+    background { visit help_path }
     
-    scenario "should have the content 'Help'" do
-      expect(page).to have_content('Help')
-    end
-
-    scenario "should have the right title" do
-      expect(page).to have_title("#{base_title} | Help")
-    end
+    it { should have_selector('h1', text: 'Help') }
+    it { should have_title(full_title('Help')) }
   end
 
   feature "About page" do
-    background { visit '/static_pages/about' }
+    background { visit about_path }
 
-    scenario "should have the content 'About Us'" do
-      expect(page).to have_content('About Us')
-    end
-
-    scenario "should have the right title" do
-      expect(page).to have_title("#{base_title} | About")
-    end
+    it { should have_selector('h1', text: 'About Us') }
+    it { should have_title(full_title('About Us')) }
   end
 
   feature "Contact page" do
-    background { visit '/static_pages/contact' }
+    background { visit contact_path }
   
-    scenario "should have the content 'Contact'" do
-      expect(page).to have_content('Contact')
-    end
+    it { should have_selector('h1', text: 'Contact') }
+    it { have_title(full_title('Contact')) }
+  end
 
-    scenario "should have the right title" do
-      expect(page).to have_title("#{base_title} | Contact")
-    end
+  scenario "clicking layout links" do
+    visit root_path
+    click_link 'About'
+    expect(page).to have_title(full_title('About Us'))
+    click_link 'Help'
+    expect(page).to have_title(full_title('Help'))
+    click_link 'Contact'
+    expect(page).to have_title(full_title('Contact'))
+    click_link 'Home'
+    click_link 'Sign up now!'
+    expect(page).to have_title(full_title('Sign up'))
+    click_link "sample app"
+    expect(page).to have_title(full_title(''))
   end
 end
