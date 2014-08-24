@@ -1,11 +1,24 @@
 <header class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-  <div class="container-fluid">
+  <div class="container">
     <%= link_to 'sample app', root_path, id: 'logo' %>
     <nav>
       <ul class="nav navbar-nav navbar-right">
         <li><%= link_to 'Home',    root_path %></li>
         <li><%= link_to 'Help',    help_path %></li>
-        <li><%= link_to 'Sign in', '#' %></li>
+        <% if signed_in? %>
+          <li><%= link_to 'Users', '#' %></li>
+          <li class="dropdown">
+            <a class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" href='#'>Account<span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+              <li role="presentation"><%= link_to 'Profile', current_user, role: 'menuitem', tabindex: '-1' %></li>
+              <li role="presentation"><%= link_to 'Settings', '#', role: 'menuitem', tabindex: '-1' %></li>
+              <li role="presentation" class="divider"></li>
+              <li><%= link_to 'Sign out', signout_path, method: :delete, role: 'menuitem', tabindex: '-1' %></li>
+            </ul>
+          </li>
+        <% else %>
+          <li><%= link_to 'Sign in', signin_path %></li>
+        <% end %>
       </ul>
     </nav>
   </div>

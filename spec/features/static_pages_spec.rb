@@ -1,50 +1,50 @@
 require 'rails_helper'
 
 feature "Static pages" do
+
+  scenario "when visiting the Home page" do
+    visit root_path
   
-  subject { page }
+    expect(page).to have_h1_header 'Sample App'
+    expect(page).to have_proper_title_for :home_page
+    expect(page).not_to have_title '| Home'
+  end
 
-  feature "Home page" do
-    background { visit root_path }
+  scenario "when visiting the Help page" do
+    visit help_path
     
-    it { should have_selector('h1', text: 'Sample App') }
-    it { should have_title(full_title('')) }
-    it { should_not have_title("| Home") }
+    expect(page).to have_h1_header 'Help'
+    expect(page).to have_proper_title_for :help_page
   end
 
-  feature "Help page" do
-    background { visit help_path }
-    
-    it { should have_selector('h1', text: 'Help') }
-    it { should have_title(full_title('Help')) }
+  scenario "when visiting the About page" do
+    visit about_path
+
+    expect(page).to have_h1_header 'About Us'
+    expect(page).to have_proper_title_for :about_page
   end
 
-  feature "About page" do
-    background { visit about_path }
+  scenario "when visiting the Contact page" do
+    visit contact_path
 
-    it { should have_selector('h1', text: 'About Us') }
-    it { should have_title(full_title('About Us')) }
+    expect(page).to have_h1_header 'Contact'
+    expect(page).to have_proper_title_for :contact_page
   end
 
-  feature "Contact page" do
-    background { visit contact_path }
-  
-    it { should have_selector('h1', text: 'Contact') }
-    it { have_title(full_title('Contact')) }
-  end
-
-  scenario "clicking layout links" do
+  scenario "when clicking the layout links" do
     visit root_path
     click_link 'About'
-    expect(page).to have_title(full_title('About Us'))
+    expect(page).to have_proper_title_for :about_page
     click_link 'Help'
-    expect(page).to have_title(full_title('Help'))
+    expect(page).to have_proper_title_for :help_page
     click_link 'Contact'
-    expect(page).to have_title(full_title('Contact'))
+    expect(page).to have_proper_title_for :contact_page
     click_link 'Home'
     click_link 'Sign up now!'
-    expect(page).to have_title(full_title('Sign up'))
+    expect(page).to have_proper_title_for :signup_page
+    click_link 'Sign in'
+    expect(page).to have_proper_title_for :signin_page
     click_link "sample app"
-    expect(page).to have_title(full_title(''))
+    expect(page).to have_proper_title_for :home_page
   end
 end

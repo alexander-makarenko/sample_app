@@ -1,69 +1,39 @@
 require 'rails_helper'
 
-feature "User pages" do
+feature "Signup page" do
+  background     { visit signup_path }
+  given(:user)   { FactoryGirl.build(:user) }
   
-  subject { page }
-
-  feature "signup page" do
-    background { visit signup_path }
-    
-    it { should have_selector('h1', text: 'Sign up') }
-    it { should have_title(full_title('Sign up')) }
+  scenario "when visiting the page" do
+    expect(page).to have_h1_header 'Sign up'
+    expect(page).to have_proper_title_for :signup_page
   end
 
-  feature "signup with invalid data" do
-    background { visit signup_path }
-    given(:submit) { 'Create my account' }
-
-    scenario "the user submits the empty form" do
-      expect { click_button submit }.not_to change(User, :count)
-    end
-
-    feature "after submission the validation errors should be displayed" do
-      background { click_button submit }
-
-      it { should have_css('div.alert.alert-danger', text: 'error') }
-    end      
-  end
-  
-  feature "signup with valid data" do
-    background { visit signup_path }
-    given(:submit) { 'Create my account' }
-
-    given(:user) { FactoryGirl.build(:user) }
-    background do
-      fill_in 'Name',         with: user.name
-      fill_in 'Email',        with: user.email
-      fill_in 'Password',     with: user.password
-      fill_in 'Confirmation', with: user.password_confirmation
-    end
-    
-    scenario "the user submits the filled out form" do
-      expect { click_button submit }.to change(User, :count).by(1)
-    end
-
-    feature "after submission the user should be redirected to the profile page" do
-      background { click_button submit }
-      given(:found_user) { User.find_by(email: user.email) }
-
-      it { should have_title(found_user.name) }
-
-      feature "a flash message should be displayed" do
-        it { should have_css('div.alert.alert-success', text: 'Welcome') }
-
-        # feature "the flash message should disappear on page reload" do
-        #   background { visit current_path }
-        #   it { should_not have_css('div.alert.alert-success', text: 'Welcome') }
-        # end
-      end
-    end
+  scenario "when submitting invalid data" do
+    expect { invalid_signup }.not_to change(User, :count)
+    expect(page).to have_error_message('error')
   end
 
-  feature "profile page" do
-    let(:user) { FactoryGirl.create(:user) }
-    background { visit user_path(user) }
+  scenario "when submitting valid data" do
+    expect { valid_signup(user) }.to change(User, :count).by(1)
 
-    it { should have_content(user.name) }
-    it { should have_title(user.name) }
+    newly_created_user = User.find_by(email: user.email)
+
+    expect(page).to have_title(newly_created_user.name)
+    expect(page).to have_link('Sign out')
+    expect(page).to have_success_message('Welcome')
+
+    visit current_path # reload the page
+    expect(page).not_to have_success_message('Welcome')
+  end
+end
+
+feature "User profile page" do
+  given(:user) { FactoryGirl.create(:user) }
+  background   { visit user_path(user) }
+
+  scenario "when visiting the page" do
+    expect(page).to have_title(user.name)
+    expect(page).to have_content(user.name)
   end
 end
