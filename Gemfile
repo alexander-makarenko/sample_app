@@ -2,6 +2,17 @@ source 'https://rubygems.org'
 
 gem 'rails'
 gem 'pg'
+gem 'bcrypt'
+gem 'bootstrap-sass', '~> 3.2.0'
+gem 'sass-rails', '>= 3.2'
+gem 'faker'
+gem 'will_paginate-bootstrap'
+gem 'autoprefixer-rails'
+gem 'uglifier'
+gem 'coffee-rails'
+gem 'jquery-rails'
+gem 'turbolinks'
+gem 'jbuilder'
 
 group :development, :test do
   gem 'rspec-rails'
@@ -16,16 +27,6 @@ group :test do
   gem 'libnotify'
   gem 'factory_girl_rails'
 end
-
-gem 'bcrypt'
-gem 'bootstrap-sass', '~> 3.2.0'
-gem 'sass-rails', '>= 3.2'
-gem 'autoprefixer-rails'
-gem 'uglifier'
-gem 'coffee-rails'
-gem 'jquery-rails'
-gem 'turbolinks'
-gem 'jbuilder'
 
 group :doc do
   gem 'sdoc', require: false
